@@ -1,0 +1,3 @@
+129593 ms
+5761455 total count of prime numbers
+279209790387276 total sum of prime numbers
