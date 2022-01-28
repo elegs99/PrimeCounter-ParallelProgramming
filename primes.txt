@@ -1,3 +1,2 @@
-129593 ms
-5761455 total count of prime numbers
-279209790387276 total sum of prime numbers
+129 Seconds,  Total count of prime numbers: 5761455,  Total sum of prime numbers: 279209790387276
+[99999787, 99999821, 99999827, 99999839, 99999847, 99999931, 99999941, 99999959, 99999971, 99999989]

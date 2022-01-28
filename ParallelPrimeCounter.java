@@ -21,6 +21,8 @@ public class ParallelPrimeCounter {
     long start = System.currentTimeMillis();
     int primeCount = 1; //acounting for the 2 we are skipping
     long primeSum = 2;
+    Queue<Integer> maxPrimesList = new PriorityQueue<>(10);
+
     Counter index = new Counter();
     IsPrime[] threads = new IsPrime[8];
     for (int i = 0; i < 8; i++) {
@@ -31,9 +33,21 @@ public class ParallelPrimeCounter {
       for (int i = 0; i < 8; i++) {
         if (index.value() <= target) {
           if (threads[i].IsPrime(index.increment())) {
-            primeSum += index.value()-2;
+            int primeVal = index.value()-2;
+            primeSum += primeVal;
             primeCount++;
-            // capture all primes add and save last 10 max. System.out.println(index.value()-1);
+            if (maxPrimesList.size() < 10) {
+              maxPrimesList.add(primeVal);
+            }
+            else {
+              int lowestPrime = maxPrimesList.poll();
+              if (lowestPrime < primeVal) {
+                maxPrimesList.add(primeVal);
+              }
+              else {
+                maxPrimesList.add(lowestPrime);
+              }
+            }
           }
         }
       }
@@ -42,9 +56,14 @@ public class ParallelPrimeCounter {
     long end = System.currentTimeMillis();
     try {
       FileWriter f = new FileWriter("primes.txt");
-      f.write(String.valueOf((int)(end - start)) + " ms\n");
-      f.write(String.valueOf(primeCount) + " total count of prime numbers\n");
-      f.write(String.valueOf(primeSum) + " total sum of prime numbers\n");
+      f.write(String.valueOf((int)(end - start)/1000) + " Seconds");
+      f.write(",  Total count of prime numbers: " + String.valueOf(primeCount));
+      f.write(",  Total sum of prime numbers: " + String.valueOf(primeSum) + "\n[");
+      f.write(String.valueOf(maxPrimesList.poll()));
+      while (!maxPrimesList.isEmpty()) {
+        f.write(", " + String.valueOf(maxPrimesList.poll()));
+      }
+      f.write("]");
       f.close();
     } catch (IOException e) {
       System.out.println("error with file IO");
